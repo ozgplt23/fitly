@@ -1,0 +1,30 @@
+@import "tailwindcss";
+
+@theme {
+  --color-bg: #101212;
+  --color-bg-soft: #151a18;
+  --color-card: #191e1d;
+  --color-surface: #252b29;
+  --color-accent: #a3f36b;
+  --color-ink: #f1f3f0;
+  --color-muted: #aab3ad;
+  --color-line: #303835;
+  --color-success: #a3f36b;
+  --color-warning: #f5c56b;
+  --color-danger: #f07878;
+
+  --font-sans: "Inter", system-ui, sans-serif;
+}
+
+@layer base {
+  body {
+    @apply bg-bg text-ink font-sans antialiased;
+    margin: 0;
+  }
+
+  /* Klavye ile gezerken odaklanan elemanlar belli olsun (erişilebilirlik) */
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+}
