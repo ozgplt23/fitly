@@ -1,13 +1,28 @@
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import MainLayout from './components/layout/MainLayout'
+import Dashboard from './pages/Dashboard'
+import Workouts from './pages/Workouts'
+import Exercises from './pages/Exercises'
+import Wellness from './pages/Wellness'
+import Progress from './pages/Progress'
+import Settings from './pages/Settings'
+
 export default function App() {
   return (
-    <div className="min-h-screen flex items-center justify-center p-6">
-      <div className="bg-card border border-line rounded-2xl p-8 max-w-md w-full text-center shadow-lg">
-        <h1 className="text-3xl font-extrabold text-accent">FITLY</h1>
-        <p className="text-muted mt-2">Train Smarter. Live Better.</p>
-        <button className="mt-6 bg-accent text-bg font-semibold px-6 py-3 rounded-xl hover:opacity-90 transition">
-          Kurulum Başarılı
-        </button>
-      </div>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route element={<MainLayout />}>
+          <Route path="/" element={<Dashboard />} />
+          <Route path="/workouts" element={<Workouts />} />
+          <Route path="/exercises" element={<Exercises />} />
+          <Route path="/wellness" element={<Wellness />} />
+          <Route path="/progress" element={<Progress />} />
+          <Route path="/settings" element={<Settings />} />
+        </Route>
+
+        {/* Geçersiz adres yazılırsa Dashboard'a yönlendir */}
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </BrowserRouter>
   )
 }
