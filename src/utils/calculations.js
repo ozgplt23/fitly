@@ -58,3 +58,46 @@ export const habitCompletionForDate = (habits, date) => {
   const done = habits.filter((h) => isHabitDone(h, date)).length
   return Math.round((done / habits.length) * 100)
 }
+
+const toDateString = (d) => {
+  const month = String(d.getMonth() + 1).padStart(2, '0')
+  const day = String(d.getDate()).padStart(2, '0')
+  return `${d.getFullYear()}-${month}-${day}`
+}
+
+// Bu haftanın başlangıcı (Pazartesi) ve sonu (Pazar)
+export const startOfWeekString = () => {
+  const d = new Date()
+  d.setDate(d.getDate() - ((d.getDay() + 6) % 7))
+  return toDateString(d)
+}
+
+export const endOfWeekString = () => {
+  const d = new Date()
+  d.setDate(d.getDate() - ((d.getDay() + 6) % 7) + 6)
+  return toDateString(d)
+}
+
+export const isDateInWeek = (date) =>
+  !!date && date >= startOfWeekString() && date <= endOfWeekString()
+
+// Son N günde, her gün tamamlanan antrenman sayısı (en eskiden bugüne)
+export const completedPerDay = (workouts, days = 7) =>
+  Array.from({ length: days }, (_, i) => {
+    const date = dateDaysAgo(days - 1 - i)
+    return {
+      date,
+      count: workouts.filter((w) => w.completed && w.completedAt === date).length,
+    }
+  })
+
+// Su birimi dönüşümleri (veri her zaman ml olarak saklanır)
+export const toMl = (value, unit) =>
+  Math.round(Number(value) * (unit === 'L' ? 1000 : 1))
+
+export const fromMl = (ml, unit) => (unit === 'L' ? ml / 1000 : ml)
+
+export const formatWater = (ml, unit = 'ml') =>
+  unit === 'L'
+    ? `${Number((ml / 1000).toFixed(2)).toLocaleString('tr-TR')} L`
+    : `${ml} ml`
