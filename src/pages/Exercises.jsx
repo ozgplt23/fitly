@@ -1,7 +1,9 @@
-import { useState, useMemo } from 'react'
+﻿import { useState, useMemo } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { SearchX } from 'lucide-react'
 import { exercises } from '../data/exercises'
 import useLocalStorage from '../hooks/useLocalStorage'
+import { generateId, todayString } from '../utils/calculations'
 import ExerciseSearch from '../components/exercises/ExerciseSearch'
 import ExerciseFilter from '../components/exercises/ExerciseFilter'
 import ExerciseCard from '../components/exercises/ExerciseCard'
@@ -21,6 +23,9 @@ const normalize = (text) => text.toLocaleLowerCase('tr-TR').trim()
 
 export default function Exercises() {
   const [favorites, setFavorites] = useLocalStorage('fitly_favorites', [])
+  const [workouts, setWorkouts] = useLocalStorage('fitly_workouts', [])
+  const navigate = useNavigate()
+
   const [query, setQuery] = useState('')
   const [filters, setFilters] = useState(defaultFilters)
   const [selected, setSelected] = useState(null)
@@ -36,6 +41,41 @@ export default function Exercises() {
     setFavorites((prev) =>
       prev.includes(id) ? prev.filter((favId) => favId !== id) : [...prev, id],
     )
+  }
+
+  // Seçilen egzersizi en yakın planlanmış antrenmana ekler.
+  // Planlanmış antrenman yoksa yeni bir antrenman oluşturur.
+  const addToWorkout = (exercise) => {
+    const item = {
+      exerciseId: exercise.id,
+      sets: exercise.recommended.sets,
+      reps: exercise.recommended.note ? 1 : exercise.recommended.reps,
+      weight: 0,
+    }
+    const planned = workouts.find((w) => !w.completed)
+
+    if (planned) {
+      setWorkouts((prev) =>
+        prev.map((w) =>
+          w.id === planned.id ? { ...w, exercises: [...w.exercises, item] } : w,
+        ),
+      )
+    } else {
+      setWorkouts((prev) => [
+        {
+          id: generateId(),
+          name: 'Yeni Antrenman',
+          category: 'Tüm vücut',
+          date: todayString(),
+          exercises: [item],
+          completed: false,
+          completedAt: null,
+        },
+        ...prev,
+      ])
+    }
+    setSelected(null)
+    navigate('/workouts')
   }
 
   const filtered = useMemo(() => {
@@ -98,6 +138,7 @@ export default function Exercises() {
         onClose={() => setSelected(null)}
         isFavorite={selected ? favorites.includes(selected.id) : false}
         onToggleFavorite={toggleFavorite}
+        onAddToWorkout={addToWorkout}
       />
     </div>
   )
