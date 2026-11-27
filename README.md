@@ -1,39 +1,48 @@
-# FITLY – Fitness & Wellness Planner
+﻿# FITLY – Kişisel Fitness ve Sağlıklı Yaşam Planlama Platformu
 
 **Train Smarter. Live Better.**
 
-FITLY is a modern fitness and wellness web application designed to help users manage their workouts, discover exercises, and track their daily healthy habits.
+FITLY; antrenman planlama, egzersiz öğrenme, su ve beslenme takibi, alışkanlık yönetimi ve gelişim analizini tek bir yerde sunan modern bir web uygulamasıdır.
 
-## Live Demo
+## Canlı Demo ve Kaynak Kod
 
-🌐 **Website:** https://fitly-26qr.netlify.app
+- 🌐 **Canlı site:** https://fitly-26qr.netlify.app
+- 💻 **GitHub:** https://github.com/ozgplt23/fitly
 
-## GitHub Repository
+## Ekran Görüntüleri
 
-💻 **Source Code:** https://github.com/ozgplt23/fitly
+### Dashboard
+![Dashboard](public/screenshots/dashboard.png)
 
-## About the Project
+### Antrenmanlar
+![Antrenmanlar](public/screenshots/workouts.png)
 
-FITLY is a personal fitness and wellness planning platform that brings workout management and healthy lifestyle tracking together in one place.
+### Egzersiz Kütüphanesi
+![Egzersiz Kütüphanesi](public/screenshots/exercises.png)
 
-The application provides an easy-to-use interface where users can create workout plans, explore exercise instructions, monitor water consumption, track meals, and follow their fitness progress.
+### Wellness
+![Wellness](public/screenshots/wellness.png)
 
-## Features
+### Gelişim
+![Gelişim](public/screenshots/progress.png)
 
-- **Dashboard:** View daily fitness statistics and activity summaries.
-- **Workout Management:** Create, edit, delete, and track workout plans.
-- **Exercise Library:** Search and filter exercises by muscle group.
-- **Exercise Details:** View exercise images, instructions, difficulty levels, and equipment information.
-- **Water Tracker:** Monitor daily water consumption and hydration goals.
-- **Meal Tracking:** Record meals and daily calorie intake.
-- **Habit Tracker:** Create and manage healthy daily habits.
-- **Progress Tracking:** Visualize workout activity and personal progress.
-- **Local Data Storage:** Preserve user data using LocalStorage.
-- **Responsive Design:** Access the application on desktop, tablet, and mobile devices.
+### Ayarlar
+![Ayarlar](public/screenshots/settings.png)
 
-## Technologies Used
+## Özellikler
 
-- React.js
+- **Dashboard:** Günlük ve haftalık istatistikler, bugünkü antrenman, hedefler, son aktiviteler ve haftalık aktivite grafiği. Tüm değerler gerçek kayıtlardan hesaplanır.
+- **Antrenman yönetimi (CRUD):** Antrenman ekleme, listeleme, düzenleme ve onaylı silme. Durum ve kategoriye göre filtreleme, antrenmanı tamamlama.
+- **Egzersiz kütüphanesi:** 21 egzersiz; anlık arama, kas grubu, zorluk ve ekipman filtreleri; adım adım anlatım, sık yapılan hatalar, favoriler ve antrenmana ekleme.
+- **Wellness:** Su takibi (250 ml, 500 ml, özel miktar), öğün ve kalori takibi, alışkanlık takibi ve geçmiş.
+- **Gelişim:** İstatistik kartları, haftalık ve aylık antrenman grafikleri, su grafiği ve kilo takibi.
+- **Ayarlar:** Kişisel bilgiler, su ve antrenman hedefi, birim tercihleri, tercihleri sıfırlama ve tüm verileri onaylı silme.
+- **Responsive tasarım:** Masaüstü, tablet ve mobilde çalışır.
+- **Erişilebilirlik:** Semantic HTML, klavye ile kullanım ve ARIA etiketleri.
+
+## Kullanılan Teknolojiler
+
+- React.js (fonksiyonel component'ler ve Hooks)
 - Vite
 - JavaScript (ES6+)
 - Tailwind CSS
@@ -42,54 +51,71 @@ The application provides an easy-to-use interface where users can create workout
 - Recharts
 - LocalStorage
 
-## Screenshots
-
-Project screenshots will be added here.
-
-## Installation
-
-Clone the repository:
+## Kurulum
 
 ```bash
 git clone https://github.com/ozgplt23/fitly.git
-```
-
-Navigate to the project directory:
-
-```bash
 cd fitly
-```
-
-Install dependencies:
-
-```bash
 npm install
-```
-
-Start the development server:
-
-```bash
 npm run dev
 ```
 
-Create a production build:
+Üretim sürümü için:
 
 ```bash
 npm run build
 ```
 
-## Data Storage
+## Klasör Yapısı
 
-FITLY uses the browser's LocalStorage to store workout plans, water consumption records, meals, habits, favorites, and user preferences.
+```text
+fitly/
+├── public/
+│   ├── _redirects
+│   ├── images/exercises/
+│   └── screenshots/
+├── src/
+│   ├── components/
+│   │   ├── common/        Button, Modal, EmptyState
+│   │   ├── dashboard/     StatCard, ActivityChart, TodayWorkout
+│   │   ├── exercises/     Kart, arama, filtre, detay
+│   │   ├── layout/        Sidebar, Navbar, MainLayout
+│   │   ├── progress/      WeightTracker
+│   │   ├── wellness/      Su, öğün, alışkanlık
+│   │   └── workouts/      Kart, form, detay, egzersiz seçici
+│   ├── data/              Egzersiz verisi, ayarlar, kategoriler
+│   ├── hooks/             useLocalStorage
+│   ├── pages/             Dashboard, Workouts, Exercises, Wellness, Progress, Settings
+│   ├── utils/             calculations.js (hesaplama fonksiyonları)
+│   ├── App.jsx
+│   └── main.jsx
+├── index.html
+└── package.json
+```
 
-No backend or external database is required in this version.
+## Veri Saklama
 
-## Project Purpose
+Tüm veriler tarayıcının LocalStorage alanında saklanır (`fitly_workouts`, `fitly_water`, `fitly_meals`, `fitly_habits`, `fitly_settings`, `fitly_favorites`, `fitly_weight_records`). Bu sürümde backend, veritabanı veya kullanıcı girişi yoktur. Veriler yalnızca kullanıcının kendi tarayıcısında kalır.
 
-This project was developed to practice modern frontend development, React component architecture, state management, CRUD operations, responsive UI design, and client-side data persistence.
+## Yayınlama
 
-## Developer
+Proje Netlify üzerinden yayınlanmıştır.
+
+- Build komutu: `npm run build`
+- Yayın klasörü: `dist`
+- `public/_redirects` dosyası, sayfa yenilendiğinde React Router yönlendirmelerinin çalışmasını sağlar.
+
+## Bilinen Sınırlamalar
+
+- Egzersiz görselleri şu an kas grubuna göre placeholder olarak gösterilir. Her egzersizin `image` alanına bir görsel yolu yazılarak gerçek görsel veya GIF eklenebilir.
+- Başlangıç egzersiz listesinde kardiyo hareketi yoktur.
+- Ağırlık birimi (kg/lb) yalnızca etiketi değiştirir, mevcut değerler dönüştürülmez.
+
+## Proje Amacı
+
+Bu proje; modern frontend geliştirme, React component mimarisi, state yönetimi, CRUD işlemleri, responsive arayüz ve istemci tarafı veri saklama pratiği için geliştirilmiştir.
+
+## Geliştirici
 
 **Özge Polat**
-
 GitHub: https://github.com/ozgplt23
