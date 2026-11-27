@@ -1,23 +1,65 @@
-import { useEffect, useRef } from 'react'
+﻿import { useEffect, useRef } from 'react'
 import { X } from 'lucide-react'
 
+const FOCUSABLE =
+  'input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), [href], [tabindex]:not([tabindex="-1"])'
+
 export default function Modal({ isOpen, onClose, title, children, maxWidth = 'max-w-2xl' }) {
+  const dialogRef = useRef(null)
   const closeRef = useRef(null)
 
+  // onClose her render'da değişebilir. Ref'te tutarak effect'in
+  // yeniden çalışmasını ve odağın sıfırlanmasını engelliyoruz.
+  const onCloseRef = useRef(onClose)
+  useEffect(() => {
+    onCloseRef.current = onClose
+  }, [onClose])
+
+  // Yalnızca modal açılıp kapandığında çalışır
   useEffect(() => {
     if (!isOpen) return
+
+    const previouslyFocused = document.activeElement
+
     const handleKey = (e) => {
-      if (e.key === 'Escape') onClose()
+      if (e.key === 'Escape') {
+        onCloseRef.current()
+        return
+      }
+      // Tab ile odak modalın dışına çıkmasın
+      if (e.key === 'Tab' && dialogRef.current) {
+        const items = dialogRef.current.querySelectorAll(FOCUSABLE)
+        if (items.length === 0) return
+        const first = items[0]
+        const last = items[items.length - 1]
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault()
+          last.focus()
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault()
+          first.focus()
+        }
+      }
     }
+
     window.addEventListener('keydown', handleKey)
-    // Açılırken arka planın kaymasını engelle
     document.body.style.overflow = 'hidden'
-    closeRef.current?.focus()
+
+    // Açılışta bir kez: önce içerikteki ilk form alanına, yoksa X butonuna odaklan
+    const body = dialogRef.current?.querySelector(
+      'input:not([disabled]), select:not([disabled]), textarea:not([disabled])',
+    )
+    ;(body || closeRef.current)?.focus()
+
     return () => {
       window.removeEventListener('keydown', handleKey)
       document.body.style.overflow = ''
+      // Kapanınca odağı modalı açan elemana geri ver
+      if (previouslyFocused && typeof previouslyFocused.focus === 'function') {
+        previouslyFocused.focus()
+      }
     }
-  }, [isOpen, onClose])
+  }, [isOpen])
 
   if (!isOpen) return null
 
@@ -27,6 +69,7 @@ export default function Modal({ isOpen, onClose, title, children, maxWidth = 'ma
       onClick={onClose}
     >
       <div
+        ref={dialogRef}
         role="dialog"
         aria-modal="true"
         aria-label={title}
